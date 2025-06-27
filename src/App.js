@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import "./css/import.css";
+import { AuthContextProvider } from "./lib/login/LoginAuth";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginContainer from "./components/LoginContainer.jsx";
+import LoginForm from "./pages/login/LoginFrom.jsx";
+import DashboardContainer from "./components/DashboardContainer.jsx";
+import DashboardHome from "./pages/DashboardHome.jsx";
+import DashboardHistory from "./pages/DashboardHistory.jsx";
+import DashboardFileUpload from "./pages/DashboardFileUpload.jsx";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContextProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginContainer />}>
+            <Route index element={<LoginForm />} />
+            <Route path="joinUs" />
+          </Route>
+          <Route path="/dashboard" element={<DashboardContainer />}>
+            <Route index element={<DashboardHome />} />
+            <Route path="fileUpload" element={<DashboardFileUpload />} />
+            <Route path="history" element={<DashboardHistory />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthContextProvider>
   );
 }
 
