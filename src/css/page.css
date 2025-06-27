@@ -114,10 +114,11 @@
       text-align: center;
       margin-bottom: 25px;
     }
-    > button {
+    > mark {
       display: block;
+      text-align: center;
       width: 250px;
-      height: 70px;
+      line-height: 70px;
       background-color: rgb(89, 163, 249);
       border-radius: 8px;
       font-size: 22px;
@@ -181,11 +182,11 @@
           }
         }
         &:nth-of-type(2) {
-          background: url(../../public/images/basket_icon.png) no-repeat center /
-            contain;
+          background: url(../../public/images/basket_icon_blue.png) no-repeat
+            center / contain;
           cursor: pointer;
           &:hover {
-            background: url(../../public/images/basket_icon_blue.png) no-repeat
+            background: url(../../public/images/basket_icon.png) no-repeat
               center / contain;
           }
         }

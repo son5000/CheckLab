@@ -40,7 +40,7 @@ export function InputFile({ setUploadedFiles }) {
         <img src="/images/upload_Icon.png" alt="" />
         <p>Drag and drop files here</p>
         <span>- OR -</span>
-        <button type="button">Browse Files</button>
+        <mark type="button">Browse Files</mark>
       </label>
     </form>
   );

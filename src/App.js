@@ -13,7 +13,7 @@ function App() {
     <AuthContextProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginContainer />}>
+          <Route path="/" element={<LoginContainer />}>
             <Route index element={<LoginForm />} />
             <Route path="joinUs" />
           </Route>
