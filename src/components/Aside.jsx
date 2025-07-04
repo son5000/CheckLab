@@ -30,32 +30,14 @@ export default function Aside() {
           <NavLink
             to="/"
             className={({ isActive }) => (isActive ? "active" : "")}
-          >
-            exsample 2
-          </NavLink>
+          ></NavLink>
         </li>
         <li>
           <NavLink
             to="/"
             className={({ isActive }) => (isActive ? "active" : "")}
           >
-            exsample 3
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/"
-            className={({ isActive }) => (isActive ? "active" : "")}
-          >
-            exsample 4
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/"
-            className={({ isActive }) => (isActive ? "active" : "")}
-          >
-            exsample 5
+            Create Report
           </NavLink>
         </li>
       </ul>

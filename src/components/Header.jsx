@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../lib/login/LoginAuth";
+import { useAuth } from "../lib/login/loginAuth";
 
 export default function Header() {
   const { userName } = useAuth();

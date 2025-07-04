@@ -1,12 +1,12 @@
-import { useAuth } from "../../lib/login/LoginAuth.jsx";
+import { useAuth } from "../../lib/login/loginAuth.jsx";
 import { useState } from "react";
-import { checkUserFromEnv } from "../../lib/login/CheckUserFromEnv";
+import { checkUserFromEnv } from "../../lib/login/checkUserFromEnv";
 import { useNavigate } from "react-router-dom";
 
+// _________________login Form_________________
 export default function LoginForm() {
   const [inputId, setInputId] = useState("");
   const [inputPw, setInputPw] = useState("");
-
   const { login } = useAuth();
 
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="loginForm">
+    <section className="loginForm">
       <img src="/images/mainLogo.png" alt="" />
       <h2 className="font-quantico">Welcome</h2>
       <p className="font-quantico">PLEASE LOGIN TO UD CHECKGUARD DASHBOARD</p>
@@ -46,6 +46,6 @@ export default function LoginForm() {
         />
         <button type="submit">LOGIN</button>
       </form>
-    </div>
+    </section>
   );
 }

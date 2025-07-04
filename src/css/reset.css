@@ -162,3 +162,15 @@ input {
 .font-digital7 {
   font-family: "Digital-7", monospace;
 }
+
+.max_width_1440 {
+  max-width: 1440px;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.max_width_1600 {
+  max-width: 1600px;
+  margin-inline: auto;
+  width: 100%;
+}

@@ -1,12 +1,12 @@
 import "./css/import.css";
-import { AuthContextProvider } from "./lib/login/LoginAuth";
+import { AuthContextProvider } from "./lib/login/loginAuth";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginContainer from "./components/LoginContainer.jsx";
 import LoginForm from "./pages/login/LoginFrom.jsx";
 import DashboardContainer from "./components/DashboardContainer.jsx";
-import DashboardHome from "./pages/DashboardHome.jsx";
-import DashboardHistory from "./pages/DashboardHistory.jsx";
-import DashboardFileUpload from "./pages/DashboardFileUpload.jsx";
+import DashboardHome from "./pages/dashboard/Home.jsx";
+import DashboardHistory from "./pages/dashboard/History.jsx";
+import DashboardFileUpload from "./pages/dashboard/FileUpload.jsx";
 
 function App() {
   return (

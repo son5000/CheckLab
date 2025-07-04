@@ -1,3 +1,7 @@
+/* ______________global rule______________ */
+
+/*단 한 번이라도 재사용되는 스타일이라면 global.css에서 관리한다.*/
+
 body {
   background-color: #acd6fa;
 }
@@ -37,7 +41,7 @@ header {
 }
 
 aside {
-  grid-area: sidebar;
+  grid-area: aside;
   background-color: #e9ecef;
   > div {
     box-sizing: border-box;
@@ -85,9 +89,16 @@ aside {
   grid-area: section;
   background-color: #fff;
   padding: 20px 30px 20px;
+  overflow-y: auto;
   > h2 {
     font-size: 36px;
     margin-bottom: 10px;
+  }
+  > p {
+    color: lightslategray;
+    margin-bottom: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid rgb(232, 231, 231);
   }
 }
 
@@ -98,18 +109,6 @@ footer {
   text-align: center;
   align-items: center;
   justify-content: center;
-}
-
-.max_width_1440 {
-  max-width: 1440px;
-  margin-inline: auto;
-  width: 100%;
-}
-
-.max_width_1600 {
-  max-width: 1600px;
-  margin-inline: auto;
-  width: 100%;
 }
 
 .loginContainer {
@@ -142,7 +141,7 @@ footer {
       > img {
         position: absolute;
         &:nth-of-type(1) {
-          width: 120%;
+          width: 130%;
           left: 45%;
           transform: translate(-50%, -50%);
           top: 50%;
@@ -151,7 +150,6 @@ footer {
     }
     > section {
       width: 50%;
-      height: 800px;
     }
   }
   > footer {
@@ -166,12 +164,12 @@ footer {
   display: grid;
   margin-block: 30px;
   grid-template-columns: 240px 1fr;
-  grid-template-rows: 50px 750px 40px;
+  grid-template-rows: 50px 800px 20px;
   grid-template-areas:
-    "sidebar header"
-    "sidebar section"
+    "aside header"
+    "aside section"
     "footer footer";
-  gap: 25px;
+  gap: 10px 20px;
   > * {
     border-radius: 8px;
   }

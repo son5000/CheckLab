@@ -1,11 +1,13 @@
+/* ________________page rule ________________ */
+/*단일 페이지에서만 사용되는 스타일은 해당 페이지의 page.css 파일에서 관리한다.*/
+
 /* ________________login main page ________________ */
 .loginForm {
-  width: 100%;
+  width: 50%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
   position: relative;
   > img {
     margin-block: 50px 150px;
@@ -60,153 +62,441 @@
 
 /* ________________dashboard fileupload page ________________ */
 .fileUpload {
-  > p {
-    color: lightslategray;
-    margin-bottom: 30px;
-  }
-  > div {
-    width: 100%;
+  .inputFileBox {
+    width: 90%;
+    margin: 0 auto;
+    height: 200px;
+    position: relative;
     display: flex;
-    align-items: flex-start;
-    gap: 50px;
-  }
-}
-.inputFileBox {
-  width: 30%;
-  min-width: 400px;
-  aspect-ratio: 1/1;
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  > input {
-    width: 100%;
-    height: 100%;
-    text-indent: -9999px;
-    border: 5px dashed rgb(155, 155, 255);
-    border-radius: 8px;
-    box-sizing: border-box;
-    color: transparent;
-    &:hover {
-      background-color: lightcyan;
+    align-items: center;
+    flex-direction: column;
+    > input {
+      width: 100%;
+      height: 100%;
+      text-indent: -9999px;
+      border: 5px dashed rgb(155, 155, 255);
+      border-radius: 8px;
+      box-sizing: border-box;
+      color: transparent;
+      &:hover {
+        background-color: lightcyan;
+      }
+    }
+    > label {
+      cursor: pointer;
+      color: rgb(130, 130, 229);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      > img {
+        width: 30px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+      > p {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
+      > span {
+        font-size: 16px;
+        display: block;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      > mark {
+        display: block;
+        text-align: center;
+        width: 250px;
+        line-height: 50px;
+        background-color: rgb(89, 163, 249);
+        border-radius: 8px;
+        font-size: 22px;
+        color: white;
+        cursor: pointer;
+      }
     }
   }
-  > label {
-    cursor: pointer;
-    color: rgb(130, 130, 229);
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    > img {
-      width: 70px;
-      margin-top: 65px;
-      margin-bottom: 40px;
+  .uploadedFileListBox {
+    margin-bottom: 300px;
+    > div:nth-of-type(1) {
+      width: 100%;
+      box-sizing: border-box;
+      padding-inline: 20px;
+      margin-top: 50px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      > h3 {
+        font-size: 28px;
+      }
+      > button {
+        line-height: 40px;
+        width: 100px;
+        background-color: #68f118;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+      }
     }
     > p {
-      font-size: 22px;
-      margin-bottom: 25px;
+      text-indent: 30px;
+      font-size: 14px;
+      color: lightslategray;
+      line-height: 50px;
+      border-bottom: 1px solid rgb(232, 231, 231);
     }
-    > span {
-      font-size: 18px;
-      display: block;
-      text-align: center;
-      margin-bottom: 25px;
-    }
-    > mark {
-      display: block;
-      text-align: center;
-      width: 250px;
-      line-height: 70px;
-      background-color: rgb(89, 163, 249);
-      border-radius: 8px;
-      font-size: 22px;
-      color: white;
-      cursor: pointer;
-    }
-  }
-}
-.uploadedFileListBox {
-  width: 50%;
-  min-height: 400px;
-  aspect-ratio: 1/1;
-  > h3 {
-    font-size: 28px;
-    margin-bottom: 5px;
-  }
-  > div {
-    width: 100%;
-    box-sizing: border-box;
-    padding-inline: 20px;
-    text-align: right;
-    margin-bottom: 20px;
-    > button {
+    .toolBar {
+      width: 100%;
+      padding-right: 50px;
       line-height: 40px;
-      width: 100px;
-      background-color: #68f118;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 18px;
-    }
-  }
-  > ul {
-    width: 100%;
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 50px;
-    box-sizing: border-box;
-    > li {
-      line-height: 40px;
-      text-indent: 70px;
-      margin-bottom: 20px;
-      border: 1px solid lightgray;
-      border-right: 0;
-      position: relative;
-      display: flex;
-      align-items: center;
-      > button {
-        width: 20px;
-        aspect-ratio: 1/1;
-        border-radius: 100%;
-        &:nth-of-type(1) {
-          margin-left: 250px;
-          margin-right: 30px;
-          background: url(../../public/images/picture_icon.png) no-repeat center /
-            contain;
-          cursor: pointer;
-          &:hover {
-            background: url(../../public/images/picture_icon_green.png)
-              no-repeat center / contain;
-          }
+      box-sizing: border-box;
+      border-left: 1px solid transparent;
+      > span {
+        font-size: 18px;
+        border-right: 1px solid lightgray;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        padding-inline: 10px;
+        min-width: 100px;
+        box-sizing: border-box;
+        &:first-of-type {
+          width: 251px;
         }
-        &:nth-of-type(2) {
-          background: url(../../public/images/basket_icon_blue.png) no-repeat
-            center / contain;
+        &:not(:first-of-type) {
           cursor: pointer;
+        }
+        &:nth-of-type(n + 3) {
+          width: 150px;
+          padding-inline: 10px;
+          box-sizing: border-box;
+        }
+      }
+      > input {
+        line-height: 40px;
+        border-right: 1px solid lightgray;
+        text-align: center;
+        cursor: pointer;
+        &:hover {
+          background-color: lightyellow;
+        }
+        &::placeholder {
+          font-size: 20px;
+        }
+      }
+    }
+    > ul {
+      width: 100%;
+      box-sizing: border-box;
+      > li {
+        line-height: 40px;
+        margin-bottom: 20px;
+        border: 1px solid lightgray;
+        border-right: 0;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        > p {
+          width: 250px;
+          text-align: center;
+          border-right: 1px solid lightgray;
+          position: relative;
+        }
+        > input {
+          box-sizing: border-box;
+          line-height: 40px;
+          border: 2px solid transparent;
+          border-right: 1px solid lightgray;
+          text-align: center;
+          cursor: pointer;
+          &:nth-of-type(1) {
+            width: 100px;
+            padding-inline: 10px;
+            box-sizing: border-box;
+          }
+          &:nth-of-type(n + 2) {
+            width: 150px;
+            padding-inline: 10px;
+            box-sizing: border-box;
+          }
           &:hover {
-            background: url(../../public/images/basket_icon.png) no-repeat
-              center / contain;
+            background-color: lightyellow;
+          }
+          &::placeholder {
+            font-size: 20px;
+          }
+          &.active1 {
+            border: 2px solid red;
+          }
+          &.active2 {
+            border: 2px solid navy;
+          }
+          &.active3 {
+            border: 2px solid green;
           }
         }
         > span {
-          width: 1px;
-          height: 1px;
-          overflow: hidden;
-          display: block;
+          padding-inline: 10px;
+          min-width: 100px;
+          text-align: center;
+          box-sizing: border-box;
+          border-right: 1px solid lightgray;
+        }
+        > div {
+          position: absolute;
+          width: 500px;
+          aspect-ratio: 1/0.75;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background-color: rgba(139, 138, 138, 0.685);
+          right: 85px;
+          top: 0;
+          border-radius: 8px;
+          z-index: 999;
+          > p {
+            margin-top: 5px;
+            width: 100%;
+            text-indent: 50px;
+            color: white;
+            text-shadow: 1px 1px 1px black;
+          }
+          > img {
+            max-width: 400px;
+            width: 100%;
+          }
+          > button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 25px;
+            height: 25px;
+            background-color: black;
+            border-radius: 100%;
+            border: 1px solid white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+        > button {
+          width: 20px;
+          aspect-ratio: 1/1;
+          border-radius: 100%;
+          &:nth-of-type(1) {
+            margin-left: auto;
+            margin-right: 30px;
+            background: url(../../public/images/picture_icon.png) no-repeat
+              center / contain;
+            cursor: pointer;
+            &:hover {
+              background: url(../../public/images/picture_icon_green.png)
+                no-repeat center / contain;
+            }
+          }
+          &:nth-of-type(2) {
+            background: url(../../public/images/basket_icon_blue.png) no-repeat
+              center / contain;
+            cursor: pointer;
+            &:hover {
+              background: url(../../public/images/basket_icon.png) no-repeat
+                center / contain;
+            }
+          }
+          > span {
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            display: block;
+          }
+        }
+        &::after {
+          content: "";
+          width: 35px;
+          aspect-ratio: 1/1;
+          position: absolute;
+          left: 5px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: url(../../public/images/file_icon.png) no-repeat center /
+            contain;
         }
       }
-      &::after {
-        content: "";
-        width: 35px;
-        aspect-ratio: 1/1;
+    }
+  }
+}
+
+/* ________________dashboard history page ________________ */
+.history {
+  > div:nth-of-type(1) {
+    width: 100%;
+    /* ____searchBox____ */
+    > div {
+      height: 35px;
+      display: flex;
+      position: relative;
+      align-items: center;
+      font-size: 14px;
+      margin-bottom: 20px;
+      > p {
+        margin-right: 20px;
+        border-radius: 5px;
+        width: 100px;
+        padding-left: 10px;
+        box-sizing: border-box;
+        background-color: rgb(248, 248, 248);
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          width: 15px;
+          height: 15px;
+          background: url(../../public/images/bottomArrow_icon.png) no-repeat
+            center / contain;
+          right: 8px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        &:hover {
+          & + ul {
+            display: block;
+          }
+        }
+      }
+      > ul {
+        background-color: rgb(248, 248, 248);
+        width: 100px;
+        top: 33px;
+        display: none;
         position: absolute;
-        left: 5px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: url(../../public/images/file_icon.png) no-repeat center /
-          contain;
+        &:hover {
+          display: block;
+        }
+        > li {
+          padding-left: 10px;
+          line-height: 30px;
+          cursor: pointer;
+          box-sizing: border-box;
+          &:hover {
+            background-color: lightgray;
+            color: white;
+          }
+          border-bottom: 1px solid white;
+        }
+      }
+      > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid rgb(159, 159, 159);
+        border-radius: 8px;
+        height: 100%;
+        box-sizing: border-box;
+        padding-inline: 10px;
+        &::before {
+          content: "";
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background: url(../../public/images/search_icon.png) no-repeat center /
+            contain;
+        }
+      }
+    }
+    /* ____Column & Item____ */
+    > ul {
+      width: 100%;
+      > li {
+        border-bottom: 1px solid lightgray;
+        line-height: 40px;
+        font-size: 14px;
+        &:nth-of-type(1) {
+          color: rgb(159, 159, 159);
+          > span:hover {
+            font-weight: 600;
+            color: navy;
+            cursor: pointer;
+          }
+        }
+        > span {
+          display: inline-block;
+          &:nth-of-type(1) {
+            text-indent: 10px;
+          }
+          &:nth-of-type(1),
+          &:nth-of-type(2) {
+            width: 200px;
+          }
+          &:nth-of-type(n + 3) {
+            width: 150px;
+          }
+        }
+        &:not(:first-of-type) {
+          background-color: rgb(248, 252, 255);
+          > span:nth-of-type(3) {
+            > mark {
+              background-color: rgb(196, 246, 196);
+              color: rgb(3, 75, 3);
+              display: inline-block;
+              border-radius: 5px;
+              line-height: 22px;
+              box-sizing: border-box;
+              padding-inline: 10px;
+              padding-top: 3px;
+              text-align: center;
+              &.active {
+                background-color: rgb(255, 219, 219);
+                color: rgb(190, 2, 2);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  /* _______pageNation________ */
+  > div:nth-of-type(2) {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-block: 50px;
+    > button {
+      cursor: pointer;
+      width: 30px;
+      aspect-ratio: 1/1;
+    }
+    > ol {
+      display: flex;
+      gap: 50px;
+      > li {
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+
+        > button {
+          cursor: pointer;
+          width: 100%;
+          height: 100%;
+        }
+        > button.active {
+          font-weight: 600;
+          color: dodgerblue;
+          /* border-radius: 100%; */
+          font-size: 18px;
+          /* border: 1px solid black; */
+        }
       }
     }
   }
