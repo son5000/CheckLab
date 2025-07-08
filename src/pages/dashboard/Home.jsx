@@ -1,3 +1,3 @@
 export default function DashboardHome() {
-  return <section></section>;
+  return <section className="home content">CREATE PROJECT</section>;
 }

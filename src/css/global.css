@@ -141,10 +141,11 @@ footer {
       > img {
         position: absolute;
         &:nth-of-type(1) {
-          width: 130%;
+          width: 100%;
           left: 45%;
-          transform: translate(-50%, -50%);
           top: 50%;
+          transform: translate(-50%, -50%);
+          scale: 120%;
         }
       }
     }
@@ -162,9 +163,9 @@ footer {
 
 .DashboardContainer {
   display: grid;
-  margin-block: 30px;
+  margin-block: 10px;
   grid-template-columns: 240px 1fr;
-  grid-template-rows: 50px 800px 20px;
+  grid-template-rows: 50px 850px 20px;
   grid-template-areas:
     "aside header"
     "aside section"

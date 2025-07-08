@@ -7,6 +7,7 @@ import DashboardContainer from "./components/DashboardContainer.jsx";
 import DashboardHome from "./pages/dashboard/Home.jsx";
 import DashboardHistory from "./pages/dashboard/History.jsx";
 import DashboardFileUpload from "./pages/dashboard/FileUpload.jsx";
+import FileDetail from "./components/dashBoard/history/FileDetail.jsx";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route index element={<DashboardHome />} />
             <Route path="fileUpload" element={<DashboardFileUpload />} />
             <Route path="history" element={<DashboardHistory />} />
+            <Route path="history/:id" element={<FileDetail />} />
           </Route>
         </Routes>
       </BrowserRouter>

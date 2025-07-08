@@ -1,9 +1,39 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import sampleData from "../../lib/data/sample.json";
+import {
+  sortByDateDesc,
+  sortByFilenameNumericDesc,
+  dataSorting,
+} from "../../lib/dashboard/dataSorting";
 
 export default function DashboardHistory() {
-  const [isCategorieSelect, setIsCategorieSelect] = useState("파일명");
+  // _____________사용자 별 저장 데이터 수신 Api 필요 _____________
+
+  // _____________원본 데이터_____________
+  const [rawData] = useState(sampleData);
+
+  // _____________정렬 데이터_____________
+  const [sortedData, setSortedData] = useState([]);
+
+  // _____________pageNation 초기 설정_____________
   const [currentData, setCurrentData] = useState([]);
+  // _____________페이지당 최대 표시 item 수 설정 _____________
   const itemsPerPage = 20;
+
+  // _____________검색 input 설정 초기값 _____________
+  const [searchInput, setSearchInput] = useState("");
+  // _____________검색 input dropDown menu (초기 세팅) _____________
+  const [isCategorieSelect, setIsCategorieSelect] = useState("파일명");
+  // _____________Column 클릭시 sorting 제어 (asc, desc) toggle boolean _____________
+  // _____________0: 등록일, 1:파일명, 2: 오류구분, 3: 설비구분, 4: 장소, 5: 설비명
+  const [sortingOption, setSortingOption] = useState(Array(7).fill(false));
+
+  // _____________첫 렌더링시에 진행 할 데이터 정렬_____________
+  // _____________1.파일명 내림차순 => 2. 등록일 내림차순 (최신순으로 정렬)
+  useEffect(() => {
+    setSortedData(sortByDateDesc(sortByFilenameNumericDesc(rawData)));
+  }, [rawData]);
 
   return (
     <section className="history content">
@@ -14,71 +44,196 @@ export default function DashboardHistory() {
       </p>
       <div>
         <SearchBox
+          rawData={rawData}
+          setSortedData={setSortedData}
           isCategorieSelect={isCategorieSelect}
           setIsCategorieSelect={setIsCategorieSelect}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
         />
         <ul>
-          <Column />
+          <Column
+            sortingOption={sortingOption}
+            setSortingOption={setSortingOption}
+            sortedData={sortedData}
+            setSortedData={setSortedData}
+          />
           <Item data={currentData} />
         </ul>
       </div>
       <PageNation
-        data={sampleData}
+        data={sortedData}
         itemsPerPage={itemsPerPage}
-        onPageChange={(dataForPage) => setCurrentData(dataForPage)}
+        setCurrentData={(dataForPage) => setCurrentData(dataForPage)}
       />
     </section>
   );
 }
 
-// ______________파일 검색 영역______________
-export function SearchBox({ isCategorieSelect, setIsCategorieSelect }) {
-  const kategorie = ["파일명", "설비구분", "장소", "설비명"];
+// ______________인풋 파일 검색______________
+export function SearchBox({
+  rawData,
+  setSortedData,
+  isCategorieSelect,
+  setIsCategorieSelect,
+  searchInput,
+  setSearchInput,
+}) {
+  const firstRender = useRef(true);
+
+  // _____________카테고리 항목_____________
+  const category = ["파일명", "설비구분", "장소", "설비명"];
+  // _____________클릭 항목 전달받아 실제 데이터의 key값으로 변경_____________
+  const getCategoryKey = (label) => {
+    switch (label) {
+      case "파일명":
+        return "fileName";
+      case "설비구분":
+        return "category";
+      case "장소":
+        return "location";
+      case "설비명":
+        return "equipment";
+      default:
+        return "";
+    }
+  };
+  // _____________input change handler_____________
+  // _____________원본 데이터에서 filter 복사 배열 => sortedData
+  const handleChangeInput = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+
+    const selectedCategory = getCategoryKey(isCategorieSelect);
+    if (!selectedCategory) return;
+
+    const filtered = rawData.filter((item) =>
+      item[selectedCategory]?.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setSortedData(filtered);
+  };
+
+  // _____________첫 번째 렌더링 시에 진행하는 sort에 영향을 주지 않기 위해 ref로 첫 번째 렌더링 감지_____________
+  // _____________input에 값을 먼저 입력하고 dropDownMenu를 변경 할 상황을 고려_____________
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+
+    if (!searchInput) {
+      setSortedData(rawData);
+      return;
+    }
+
+    const selectedCategory = getCategoryKey(isCategorieSelect);
+    if (!selectedCategory) return;
+
+    const filtered = rawData.filter((item) =>
+      item[selectedCategory]?.toLowerCase().includes(searchInput.toLowerCase())
+    );
+
+    setSortedData(filtered);
+  }, [isCategorieSelect]);
 
   return (
     <div>
       <p>{isCategorieSelect}</p>
       <ul className={isCategorieSelect ? "active" : ""}>
-        {kategorie.map((item) => (
+        {category.map((item) => (
           <li onClick={() => setIsCategorieSelect(item)} key={item}>
             {item}
           </li>
         ))}
       </ul>
       <div>
-        <input type="text" />
+        <input
+          value={searchInput}
+          onChange={handleChangeInput}
+          type="text"
+          placeholder={`${isCategorieSelect} 검색`}
+        />
       </div>
     </div>
   );
 }
 
 // ______________상단 소팅 툴바______________
-export function Column() {
+export function Column({
+  sortingOption,
+  setSortingOption,
+  sortedData,
+  setSortedData,
+}) {
+  // _____________Column click sorting event handler_____________
+  const handleCategoryClick = (key) => {
+    const newOptionsStatus = [...sortingOption];
+
+    const keyIndexMap = {
+      date: 0,
+      fileName: 1,
+      status: 2,
+      fileType: 3,
+      category: 4,
+      location: 5,
+      equipment: 6,
+    };
+
+    const idx = keyIndexMap[key];
+
+    newOptionsStatus[idx] = !newOptionsStatus[idx];
+
+    setSortingOption(newOptionsStatus);
+
+    const order = newOptionsStatus[idx] ? "asc" : "desc";
+
+    const newSortedData = dataSorting(sortedData, key, order);
+    setSortedData(newSortedData);
+  };
   return (
     <li>
-      <span>등록일 ↑</span>
-      <span>파일명 ↑</span>
-      <span>파일오류</span>
-      <span>설비구분</span>
-      <span>장소</span>
-      <span>설비명</span>
+      <span
+        className={sortingOption[0] ? "active" : ""}
+        onClick={() => handleCategoryClick("date")}
+      >
+        등록일
+      </span>
+      <span
+        className={sortingOption[1] ? "active" : ""}
+        onClick={() => handleCategoryClick("fileName")}
+      >
+        파일명
+      </span>
+      <span onClick={() => handleCategoryClick("status")}>파일 오류</span>
+      <span onClick={() => handleCategoryClick("fileType")}>파일 유형</span>
+      <span onClick={() => handleCategoryClick("category")}>설비구분</span>
+      <span onClick={() => handleCategoryClick("location")}>장소</span>
+      <span onClick={() => handleCategoryClick("equipment")}>설비명</span>
     </li>
   );
 }
 
 // ______________File List 개별 항목______________
 export function Item({ data }) {
+  const navigate = useNavigate();
+
+  const handleClickFile = (id) => {
+    navigate(`/dashboard/history/${id}`);
+  };
+
   return (
     <>
-      {data.map((item, idx) => (
-        <li key={idx}>
+      {data.map((item) => (
+        <li onClick={() => handleClickFile(item.id)} key={item.id}>
           <span>{item.date}</span>
-          <span>{item.filename}</span>
+          <span>{item.fileName}</span>
           <span>
             <mark className={item.status === "오류" ? "active" : ""}>
               {item.status}
             </mark>
           </span>
+          <span>{item.fileType}</span>
           <span>{item.category}</span>
           <span>{item.location}</span>
           <span>{item.equipment}</span>
@@ -89,7 +244,7 @@ export function Item({ data }) {
 }
 
 // ______________페이지네이션______________
-function PageNation({ data = [], itemsPerPage = 20, onPageChange }) {
+function PageNation({ data = [], itemsPerPage = 20, setCurrentData }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = useMemo(
@@ -106,7 +261,7 @@ function PageNation({ data = [], itemsPerPage = 20, onPageChange }) {
     const validPage = Math.max(1, Math.min(page, totalPages));
     setCurrentPage(validPage);
     const sliced = getPageData(validPage);
-    onPageChange(sliced);
+    setCurrentData(sliced);
   };
 
   useEffect(() => {
@@ -156,427 +311,3 @@ function PageNation({ data = [], itemsPerPage = 20, onPageChange }) {
     </div>
   );
 }
-
-const sampleData = [
-  {
-    id: 1,
-    date: "2025. 07. 07 14:20",
-    filename: "20250626_150519",
-    status: "정상",
-    category: "전기설비",
-    location: "울산UGPS",
-    equipment: "TIE ACB",
-    extra: "",
-  },
-  {
-    id: 2,
-    date: "2025. 07. 06 14:24",
-    filename: "20250625_140312",
-    status: "오류",
-    category: "전기설비",
-    location: "부산항만",
-    equipment: "MAIN ACB",
-    extra: "",
-  },
-
-  {
-    id: 1,
-    date: "2025. 07. 07 14:20",
-    filename: "20250626_150519",
-    status: "정상",
-    category: "전기설비",
-    location: "울산UGPS",
-    equipment: "TIE ACB",
-    extra: "",
-  },
-  {
-    id: 2,
-    date: "2025. 07. 06 14:24",
-    filename: "20250625_140312",
-    status: "오류",
-    category: "전기설비",
-    location: "부산항만",
-    equipment: "MAIN ACB",
-    extra: "",
-  },
-  {
-    id: 3,
-    date: "2025. 07. 05 15:20",
-    filename: "20250624_130133",
-    status: "정상",
-    category: "기계설비",
-    location: "서울지사",
-    equipment: "PUMP 01",
-    extra: "",
-  },
-  {
-    id: 4,
-    date: "2025. 07. 04 16:20",
-    filename: "20250623_120908",
-    status: "정상",
-    category: "계측기기",
-    location: "대전본부",
-    equipment: "TEMP SENSOR",
-    extra: "",
-  },
-  {
-    id: 5,
-    date: "2025. 07. 03 17:20",
-    filename: "20250622_115011",
-    status: "오류",
-    category: "전기설비",
-    location: "광주센터",
-    equipment: "TIE BKR",
-    extra: "",
-  },
-  {
-    id: 6,
-    date: "2025. 07. 02 17:20",
-    filename: "20250621_110430",
-    status: "정상",
-    category: "기계설비",
-    location: "인천지사",
-    equipment: "FAN MOTOR",
-    extra: "",
-  },
-  {
-    id: 7,
-    date: "2025. 07. 01 20:20",
-    filename: "20250620_104501",
-    status: "정상",
-    category: "계측기기",
-    location: "수원센터",
-    equipment: "VOLT METER",
-    extra: "",
-  },
-  {
-    id: 8,
-    date: "2025. 06. 30 21:20",
-    filename: "20250619_095012",
-    status: "오류",
-    category: "전기설비",
-    location: "대구지사",
-    equipment: "MAIN ACB",
-    extra: "",
-  },
-  {
-    id: 9,
-    date: "2025. 06. 29 22:20",
-    filename: "20250618_083003",
-    status: "정상",
-    category: "기계설비",
-    location: "포항지사",
-    equipment: "VALVE",
-    extra: "",
-  },
-  {
-    id: 10,
-    date: "2025. 06. 28 23:20",
-    filename: "20250617_072000",
-    status: "정상",
-    category: "계측기기",
-    location: "창원센터",
-    equipment: "AMP SENSOR",
-    extra: "",
-  },
-  {
-    id: 1,
-    date: "2025. 07. 07 14:20",
-    filename: "20250626_150519",
-    status: "정상",
-    category: "전기설비",
-    location: "울산UGPS",
-    equipment: "TIE ACB",
-    extra: "",
-  },
-  {
-    id: 2,
-    date: "2025. 07. 06 14:24",
-    filename: "20250625_140312",
-    status: "오류",
-    category: "전기설비",
-    location: "부산항만",
-    equipment: "MAIN ACB",
-    extra: "",
-  },
-  {
-    id: 3,
-    date: "2025. 07. 05 15:20",
-    filename: "20250624_130133",
-    status: "정상",
-    category: "기계설비",
-    location: "서울지사",
-    equipment: "PUMP 01",
-    extra: "",
-  },
-  {
-    id: 4,
-    date: "2025. 07. 04 16:20",
-    filename: "20250623_120908",
-    status: "정상",
-    category: "계측기기",
-    location: "대전본부",
-    equipment: "TEMP SENSOR",
-    extra: "",
-  },
-  {
-    id: 5,
-    date: "2025. 07. 03 17:20",
-    filename: "20250622_115011",
-    status: "오류",
-    category: "전기설비",
-    location: "광주센터",
-    equipment: "TIE BKR",
-    extra: "",
-  },
-  {
-    id: 6,
-    date: "2025. 07. 02 17:20",
-    filename: "20250621_110430",
-    status: "정상",
-    category: "기계설비",
-    location: "인천지사",
-    equipment: "FAN MOTOR",
-    extra: "",
-  },
-  {
-    id: 7,
-    date: "2025. 07. 01 20:20",
-    filename: "20250620_104501",
-    status: "정상",
-    category: "계측기기",
-    location: "수원센터",
-    equipment: "VOLT METER",
-    extra: "",
-  },
-  {
-    id: 8,
-    date: "2025. 06. 30 21:20",
-    filename: "20250619_095012",
-    status: "오류",
-    category: "전기설비",
-    location: "대구지사",
-    equipment: "MAIN ACB",
-    extra: "",
-  },
-  {
-    id: 9,
-    date: "2025. 06. 29 22:20",
-    filename: "20250618_083003",
-    status: "정상",
-    category: "기계설비",
-    location: "포항지사",
-    equipment: "VALVE",
-    extra: "",
-  },
-  {
-    id: 10,
-    date: "2025. 06. 28 23:20",
-    filename: "20250617_072000",
-    status: "정상",
-    category: "계측기기",
-    location: "창원센터",
-    equipment: "AMP SENSOR",
-    extra: "",
-  },
-  {
-    id: 1,
-    date: "2025. 07. 07 14:20",
-    filename: "20250626_150519",
-    status: "정상",
-    category: "전기설비",
-    location: "울산UGPS",
-    equipment: "TIE ACB",
-    extra: "",
-  },
-  {
-    id: 2,
-    date: "2025. 07. 06 14:24",
-    filename: "20250625_140312",
-    status: "오류",
-    category: "전기설비",
-    location: "부산항만",
-    equipment: "MAIN ACB",
-    extra: "",
-  },
-  {
-    id: 3,
-    date: "2025. 07. 05 15:20",
-    filename: "20250624_130133",
-    status: "정상",
-    category: "기계설비",
-    location: "서울지사",
-    equipment: "PUMP 01",
-    extra: "",
-  },
-  {
-    id: 4,
-    date: "2025. 07. 04 16:20",
-    filename: "20250623_120908",
-    status: "정상",
-    category: "계측기기",
-    location: "대전본부",
-    equipment: "TEMP SENSOR",
-    extra: "",
-  },
-  {
-    id: 5,
-    date: "2025. 07. 03 17:20",
-    filename: "20250622_115011",
-    status: "오류",
-    category: "전기설비",
-    location: "광주센터",
-    equipment: "TIE BKR",
-    extra: "",
-  },
-  {
-    id: 6,
-    date: "2025. 07. 02 17:20",
-    filename: "20250621_110430",
-    status: "정상",
-    category: "기계설비",
-    location: "인천지사",
-    equipment: "FAN MOTOR",
-    extra: "",
-  },
-  {
-    id: 7,
-    date: "2025. 07. 01 20:20",
-    filename: "20250620_104501",
-    status: "정상",
-    category: "계측기기",
-    location: "수원센터",
-    equipment: "VOLT METER",
-    extra: "",
-  },
-  {
-    id: 8,
-    date: "2025. 06. 30 21:20",
-    filename: "20250619_095012",
-    status: "오류",
-    category: "전기설비",
-    location: "대구지사",
-    equipment: "MAIN ACB",
-    extra: "",
-  },
-  {
-    id: 9,
-    date: "2025. 06. 29 22:20",
-    filename: "20250618_083003",
-    status: "정상",
-    category: "기계설비",
-    location: "포항지사",
-    equipment: "VALVE",
-    extra: "",
-  },
-  {
-    id: 10,
-    date: "2025. 06. 28 23:20",
-    filename: "20250617_072000",
-    status: "정상",
-    category: "계측기기",
-    location: "창원센터",
-    equipment: "AMP SENSOR",
-    extra: "",
-  },
-  {
-    id: 1,
-    date: "2025. 07. 07 14:20",
-    filename: "20250626_150519",
-    status: "정상",
-    category: "전기설비",
-    location: "울산UGPS",
-    equipment: "TIE ACB",
-    extra: "",
-  },
-  {
-    id: 2,
-    date: "2025. 07. 06 14:24",
-    filename: "20250625_140312",
-    status: "오류",
-    category: "전기설비",
-    location: "부산항만",
-    equipment: "MAIN ACB",
-    extra: "",
-  },
-  {
-    id: 3,
-    date: "2025. 07. 05 15:20",
-    filename: "20250624_130133",
-    status: "정상",
-    category: "기계설비",
-    location: "서울지사",
-    equipment: "PUMP 01",
-    extra: "",
-  },
-  {
-    id: 4,
-    date: "2025. 07. 04 16:20",
-    filename: "20250623_120908",
-    status: "정상",
-    category: "계측기기",
-    location: "대전본부",
-    equipment: "TEMP SENSOR",
-    extra: "",
-  },
-  {
-    id: 5,
-    date: "2025. 07. 03 17:20",
-    filename: "20250622_115011",
-    status: "오류",
-    category: "전기설비",
-    location: "광주센터",
-    equipment: "TIE BKR",
-    extra: "",
-  },
-  {
-    id: 6,
-    date: "2025. 07. 02 17:20",
-    filename: "20250621_110430",
-    status: "정상",
-    category: "기계설비",
-    location: "인천지사",
-    equipment: "FAN MOTOR",
-    extra: "",
-  },
-  {
-    id: 7,
-    date: "2025. 07. 01 20:20",
-    filename: "20250620_104501",
-    status: "정상",
-    category: "계측기기",
-    location: "수원센터",
-    equipment: "VOLT METER",
-    extra: "",
-  },
-  {
-    id: 8,
-    date: "2025. 06. 30 21:20",
-    filename: "20250619_095012",
-    status: "오류",
-    category: "전기설비",
-    location: "대구지사",
-    equipment: "MAIN ACB",
-    extra: "",
-  },
-  {
-    id: 9,
-    date: "2025. 06. 29 22:20",
-    filename: "20250618_083003",
-    status: "정상",
-    category: "기계설비",
-    location: "포항지사",
-    equipment: "VALVE",
-    extra: "",
-  },
-  {
-    id: 10,
-    date: "2025. 06. 28 23:20",
-    filename: "20250617_072000",
-    status: "정상",
-    category: "계측기기",
-    location: "창원센터",
-    equipment: "AMP SENSOR",
-    extra: "",
-  },
-];
