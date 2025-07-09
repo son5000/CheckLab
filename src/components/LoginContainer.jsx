@@ -6,7 +6,7 @@ export default function LoginContainer() {
     <div className="loginContainer max_width_1440">
       <div>
         <div>
-          <img src="/images/ud-1000_model.gif" alt="" />
+          <img src="/images/ud-1000_model_ver2.gif" alt="" />
         </div>
         <Outlet />
       </div>

@@ -3,11 +3,11 @@ import { AuthContextProvider } from "./lib/login/loginAuth";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginContainer from "./components/LoginContainer.jsx";
 import LoginForm from "./pages/login/LoginFrom.jsx";
-import DashboardContainer from "./components/DashboardContainer.jsx";
-import DashboardHome from "./pages/dashboard/Home.jsx";
-import DashboardHistory from "./pages/dashboard/History.jsx";
-import DashboardFileUpload from "./pages/dashboard/FileUpload.jsx";
-import FileDetail from "./components/dashBoard/history/FileDetail.jsx";
+import Container from "./components/Container.jsx";
+import History from "./pages/project/History.jsx";
+import FileUpload from "./pages/project/FileUpload.jsx";
+import FileDetail from "./components/project/history/FileDetail.jsx";
+import Overview from "./pages/project/Overview.jsx";
 
 function App() {
   return (
@@ -18,10 +18,10 @@ function App() {
             <Route index element={<LoginForm />} />
             <Route path="joinUs" />
           </Route>
-          <Route path="/dashboard" element={<DashboardContainer />}>
-            <Route index element={<DashboardHome />} />
-            <Route path="fileUpload" element={<DashboardFileUpload />} />
-            <Route path="history" element={<DashboardHistory />} />
+          <Route path="/project" element={<Container />}>
+            <Route index element={<Overview />} />
+            <Route path="fileUpload" element={<FileUpload />} />
+            <Route path="history" element={<History />} />
             <Route path="history/:id" element={<FileDetail />} />
           </Route>
         </Routes>

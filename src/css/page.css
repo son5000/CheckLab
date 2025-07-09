@@ -33,7 +33,7 @@
     align-items: center;
     > input {
       &::placeholder {
-        color: lightgray;
+        color: var(--Color--M-Gray);
         font-weight: 600;
       }
       width: 70%;
@@ -58,9 +58,148 @@
   }
 }
 
-/* ________________dashboard main page ________________ */
+/* ________________project main page ________________ */
+.home {
+  > div:nth-of-type(1) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    > button {
+      margin-right: 50px;
+      line-height: 35px;
+      background-color: rgb(25, 131, 253);
+      color: white;
+      width: 130px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      &:hover {
+        background-color: var(--Color--M-blue);
+      }
+    }
+  }
+}
+/*project생성 popup*/
+.createProject {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(175, 174, 174, 0.545);
+  > div {
+    box-sizing: border-box;
+    padding-inline: 50px;
+    padding-block: 30px;
+    width: 50%;
+    max-width: 700px;
+    background-color: white;
+    > * {
+      width: 100%;
+    }
+    > div:nth-of-type(1) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      > p {
+        font-size: 18px;
+      }
+      > button {
+        cursor: pointer;
+        line-height: 25px;
+        width: 25px;
+        font-size: 1px;
+        color: transparent;
+        background: url(../../public/images/close_gray.png) no-repeat center /
+          contain;
+        &:hover {
+          background-image: url(../../public/images/close_black.png);
+        }
+      }
+    }
+    > form {
+      > * {
+        width: 100%;
+      }
+      > label {
+        font-size: 16px;
+        display: block;
+        margin-bottom: 10px;
+      }
+      > input {
+        line-height: 30px;
+        margin-bottom: 10px;
+        border: 1px solid var(--Color--M-Gray);
+      }
+      > textarea {
+        height: 300px;
+        margin-bottom: 30px;
+      }
+      > button {
+        background-color: rgb(25, 131, 253);
+        width: 170px;
+        display: block;
+        margin: 0 auto;
+        line-height: 45px;
+        color: white;
+        border-radius: 5px;
+        &:hover {
+          background-color: var(--Color--M-blue);
+        }
+      }
+    }
+  }
+}
+/* 프로젝트 목록 */
+.projectList {
+  width: 100%;
+  border-collapse: separate;
+  border-bottom: 1px solid #ccc;
+  th,
+  td {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    padding: 5px;
+    text-align: center;
+    vertical-align: middle;
+  }
 
-/* ________________dashboard fileupload page ________________ */
+  thead {
+    font-size: 15px;
+    background-color: rgb(227, 227, 227);
+    th:first-child {
+      border-top-left-radius: 8px;
+    }
+    th:last-child {
+      border-top-right-radius: 8px;
+      border-right: 1px solid #ccc;
+    }
+  }
+  tbody {
+    font-size: 14px;
+    > tr {
+      > td:last-child {
+        border-right: 1px solid #ccc;
+        > button {
+          font-size: 1px;
+          width: 20px;
+          height: 20px;
+          color: transparent;
+          background: url(../../public/images/edit_icon.png) no-repeat center /
+            contain;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+/* ________________project fileupload page ________________ */
 .fileUpload {
   .inputFileBox {
     width: 90%;
@@ -74,7 +213,7 @@
       width: 100%;
       height: 100%;
       text-indent: -9999px;
-      border: 5px dashed rgb(155, 155, 255);
+      border: 3px dashed var(--Color--M-blue);
       border-radius: 8px;
       box-sizing: border-box;
       color: transparent;
@@ -157,7 +296,7 @@
       border-left: 1px solid transparent;
       > span {
         font-size: 18px;
-        border-right: 1px solid lightgray;
+        border-right: 1px solid var(--Color--M-Gray);
         display: inline-block;
         text-align: center;
         position: relative;
@@ -178,7 +317,7 @@
       }
       > input {
         line-height: 40px;
-        border-right: 1px solid lightgray;
+        border-right: 1px solid var(--Color--M-Gray);
         text-align: center;
         cursor: pointer;
         &:hover {
@@ -195,7 +334,7 @@
       > li {
         line-height: 40px;
         margin-bottom: 20px;
-        border: 1px solid lightgray;
+        border: 1px solid var(--Color--M-Gray);
         border-right: 0;
         position: relative;
         display: flex;
@@ -204,14 +343,14 @@
         > p {
           width: 250px;
           text-align: center;
-          border-right: 1px solid lightgray;
+          border-right: 1px solid var(--Color--M-Gray);
           position: relative;
         }
         > input {
           box-sizing: border-box;
           line-height: 40px;
           border: 2px solid transparent;
-          border-right: 1px solid lightgray;
+          border-right: 1px solid var(--Color--M-Gray);
           text-align: center;
           cursor: pointer;
           &:nth-of-type(1) {
@@ -245,7 +384,7 @@
           min-width: 100px;
           text-align: center;
           box-sizing: border-box;
-          border-right: 1px solid lightgray;
+          border-right: 1px solid var(--Color--M-Gray);
         }
         > div {
           position: absolute;
@@ -332,92 +471,17 @@
   }
 }
 
-/* ________________dashboard history page ________________ */
+/* ________________project history page ________________ */
 .history {
   > div:nth-of-type(1) {
     width: 100%;
-    /* ____searchBox____ */
-    > div {
-      height: 35px;
-      display: flex;
-      position: relative;
-      align-items: center;
-      font-size: 14px;
-      margin-bottom: 20px;
-      > p {
-        margin-right: 20px;
-        border-radius: 5px;
-        width: 100px;
-        padding-left: 10px;
-        box-sizing: border-box;
-        background-color: rgb(248, 248, 248);
-        position: relative;
-        display: flex;
-        align-items: center;
-        height: 100%;
-        &::after {
-          content: "";
-          display: block;
-          position: absolute;
-          width: 15px;
-          height: 15px;
-          background: url(../../public/images/bottomArrow_icon.png) no-repeat
-            center / contain;
-          right: 8px;
-          top: 50%;
-          transform: translateY(-50%);
-        }
-        &:hover {
-          & + ul {
-            display: block;
-          }
-        }
-      }
-      > ul {
-        background-color: rgb(248, 248, 248);
-        width: 100px;
-        top: 33px;
-        display: none;
-        position: absolute;
-        &:hover {
-          display: block;
-        }
-        > li {
-          padding-left: 10px;
-          line-height: 30px;
-          cursor: pointer;
-          box-sizing: border-box;
-          &:hover {
-            background-color: lightgray;
-            color: white;
-          }
-          border-bottom: 1px solid white;
-        }
-      }
-      > div {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border: 1px solid rgb(159, 159, 159);
-        border-radius: 8px;
-        height: 100%;
-        box-sizing: border-box;
-        padding-inline: 10px;
-        &::before {
-          content: "";
-          display: inline-block;
-          width: 20px;
-          height: 20px;
-          background: url(../../public/images/search_icon.png) no-repeat center /
-            contain;
-        }
-      }
-    }
-    /* ____Column & Item____ */
+    /* searchBox */
+
+    /* Column & Item */
     > ul {
       width: 100%;
       > li {
-        border-bottom: 1px solid lightgray;
+        border-bottom: 1px solid var(--Color--M-Gray);
         line-height: 40px;
         font-size: 14px;
         &:nth-of-type(1) {

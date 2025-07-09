@@ -5,14 +5,14 @@ export default function Header() {
   const { userName } = useAuth();
 
   return (
-    <header className="max_width_1440">
+    <header>
       <h1>
-        <Link to="/dashboard">
+        <Link to="/project">
           <img src="/images/mainLogo.png" alt="" />
         </Link>
       </h1>
       <div>
-        <img src="/images/usa_icon.png" alt="" />
+        <img src="/images/korea_icon.png" alt="" />
         <p>{userName}</p>
       </div>
     </header>

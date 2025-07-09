@@ -17,7 +17,7 @@ export default function LoginForm() {
 
     if (isSuccess) {
       login(inputId);
-      navigate("/dashboard");
+      navigate("/project");
     } else {
       alert("아이디 또는 비밀번호가 틀렸습니다");
       navigate("/login");

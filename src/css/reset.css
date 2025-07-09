@@ -136,8 +136,11 @@ input {
 .font-suit {
   font-family: "SUIT-Regular", sans-serif;
 }
+* {
+  font-family: "Quantico", sans-serif;
+}
 
-.font-roboto {
+* {
   font-family: "Roboto", sans-serif;
 }
 .font-orbitron {
@@ -149,10 +152,6 @@ input {
 }
 
 .font-quantico {
-  font-family: "Quantico", sans-serif;
-}
-
-* {
   font-family: "Quantico", sans-serif;
 }
 
@@ -173,4 +172,9 @@ input {
   max-width: 1600px;
   margin-inline: auto;
   width: 100%;
+}
+
+:root {
+  --Color--M-blue: #1868db;
+  --Color--M-Gray: rgb(211, 211, 211);
 }
