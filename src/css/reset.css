@@ -111,6 +111,7 @@ button {
   color: inherit;
   padding: 0;
   margin: 0;
+  cursor: pointer;
 }
 input {
   border: 0;
@@ -168,13 +169,8 @@ input {
   width: 100%;
 }
 
-.max_width_1600 {
-  max-width: 1600px;
-  margin-inline: auto;
-  width: 100%;
-}
-
 :root {
-  --Color--M-blue: #1868db;
+  --Color--M-Blue: #1868db;
   --Color--M-Gray: rgb(211, 211, 211);
+  --Color--S-Skyblue: #d7ecff;
 }

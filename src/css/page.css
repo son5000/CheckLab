@@ -62,21 +62,14 @@
 .home {
   > div:nth-of-type(1) {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     margin-top: 20px;
     > button {
       margin-right: 50px;
       line-height: 35px;
-      background-color: rgb(25, 131, 253);
-      color: white;
       width: 130px;
-      border-radius: 5px;
-      cursor: pointer;
       font-size: 14px;
-      &:hover {
-        background-color: var(--Color--M-blue);
-      }
     }
   }
 }
@@ -132,6 +125,7 @@
         margin-bottom: 10px;
       }
       > input {
+        text-indent: 10px;
         line-height: 30px;
         margin-bottom: 10px;
         border: 1px solid var(--Color--M-Gray);
@@ -139,22 +133,19 @@
       > textarea {
         height: 300px;
         margin-bottom: 30px;
+        text-indent: 5px;
+        padding: 5px;
       }
       > button {
-        background-color: rgb(25, 131, 253);
         width: 170px;
         display: block;
         margin: 0 auto;
         line-height: 45px;
-        color: white;
-        border-radius: 5px;
-        &:hover {
-          background-color: var(--Color--M-blue);
-        }
       }
     }
   }
 }
+
 /* 프로젝트 목록 */
 .projectList {
   width: 100%;
@@ -201,9 +192,15 @@
 
 /* ________________project fileupload page ________________ */
 .fileUpload {
+  > div:nth-of-type(1) {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
   .inputFileBox {
-    width: 90%;
+    width: 30%;
     margin: 0 auto;
+    margin-top: 25px;
     height: 200px;
     position: relative;
     display: flex;
@@ -213,17 +210,17 @@
       width: 100%;
       height: 100%;
       text-indent: -9999px;
-      border: 3px dashed var(--Color--M-blue);
+      border: 3px dashed var(--Color--M-Blue);
       border-radius: 8px;
       box-sizing: border-box;
       color: transparent;
       &:hover {
-        background-color: lightcyan;
+        background-color: rgb(250, 249, 249);
       }
     }
     > label {
       cursor: pointer;
-      color: rgb(130, 130, 229);
+      color: rgb(175, 175, 175);
       position: absolute;
       inset: 0;
       display: flex;
@@ -235,11 +232,11 @@
         margin-bottom: 10px;
       }
       > p {
-        font-size: 20px;
+        font-size: 18px;
         margin-bottom: 15px;
       }
       > span {
-        font-size: 16px;
+        font-size: 14px;
         display: block;
         text-align: center;
         margin-bottom: 10px;
@@ -247,13 +244,56 @@
       > mark {
         display: block;
         text-align: center;
-        width: 250px;
+        width: 200px;
         line-height: 50px;
-        background-color: rgb(89, 163, 249);
-        border-radius: 8px;
-        font-size: 22px;
-        color: white;
+        font-size: 18px;
+      }
+    }
+  }
+  .projectSelectBox {
+    width: 60%;
+    height: 300px;
+    padding: 20px 100px 20px 30px;
+    box-sizing: border-box;
+    > p {
+      line-height: 30px;
+      > span {
+        font-size: 14px;
+      }
+    }
+    > ul {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px 5px;
+      padding-block: 10px;
+      overflow-y: scroll;
+      background-color: #fffffa;
+      > li {
+        box-sizing: border-box;
+        height: 30px;
+        font-size: 13px;
+        padding: 5px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
+        > span {
+          background-color: var(--Color--S-Skyblue);
+          color: var(--Color--M-Blue);
+          line-height: 20px;
+          padding: 5px 8px;
+          border-radius: 5px;
+          border: 2px solid transparent;
+          &.active {
+            border: 2px solid var(--Color--M-Blue);
+            background-color: transparent;
+            color: black;
+          }
+          &:hover {
+            transform: scale(110%);
+          }
+        }
       }
     }
   }
@@ -264,21 +304,16 @@
       box-sizing: border-box;
       padding-inline: 20px;
       margin-top: 50px;
-      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       > h3 {
-        font-size: 28px;
+        font-weight: 400;
       }
       > button {
         line-height: 40px;
         width: 100px;
-        background-color: #68f118;
-        color: white;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 18px;
+        font-size: 15px;
       }
     }
     > p {
@@ -393,10 +428,10 @@
           display: flex;
           flex-direction: column;
           align-items: center;
-          background-color: rgba(139, 138, 138, 0.685);
+          background-color: rgba(227, 225, 225, 0.685);
           right: 85px;
           top: 0;
-          border-radius: 8px;
+          border-radius: 5px;
           z-index: 999;
           > p {
             margin-top: 5px;
@@ -415,13 +450,14 @@
             top: 10px;
             width: 25px;
             height: 25px;
-            background-color: black;
-            border-radius: 100%;
-            border: 1px solid white;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1px;
+            color: transparent;
+            background: url(../../public/images/close_black.png) no-repeat
+              center / contain;
           }
         }
         > button {

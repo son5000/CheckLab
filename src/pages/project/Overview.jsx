@@ -1,11 +1,12 @@
-import { useState } from "react";
-
-const category = [2020, 2021, 2022, 2023, 2024, 2025];
+import { useRef, useState } from "react";
+import { useClickOutSide } from "../../lib/hooks/useClickOutside";
+import { YearSearchBox } from "../../components/project/YearSearchBox";
 
 // _________________Home Content Container _________________
 export default function Overview() {
   const [isCategorieSelect, setIsCategorieSelect] = useState(2025);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const popupRef = useRef();
 
   const handlePopupClose = () => {
     setIsPopupOpen(false);
@@ -15,14 +16,20 @@ export default function Overview() {
     <section className="home content">
       <h2>프로젝트</h2>
       <div>
-        <SearchBox
-          category={category}
+        <YearSearchBox
           setIsCategorieSelect={setIsCategorieSelect}
           isCategorieSelect={isCategorieSelect}
         />
-        <button onClick={() => setIsPopupOpen(true)}>프로젝트 만들기</button>
+        <button className="btn-bg-Blue" onClick={() => setIsPopupOpen(true)}>
+          프로젝트 만들기
+        </button>
       </div>
-      {isPopupOpen && <CreateProject handlePopupClose={handlePopupClose} />}
+      {isPopupOpen && (
+        <CreateProject
+          popupRef={popupRef}
+          handlePopupClose={handlePopupClose}
+        />
+      )}
       <p>
         <span>Projects / </span>
         <span>Project {isCategorieSelect}</span>
@@ -32,30 +39,15 @@ export default function Overview() {
   );
 }
 
-// _________________ 검색 박스 (연도별 프로젝트 검색)_________________
-function SearchBox({ category, isCategorieSelect, setIsCategorieSelect }) {
-  return (
-    <div className="searchBox">
-      <p>{isCategorieSelect}</p>
-      <ul className={isCategorieSelect ? "active" : ""}>
-        {category.map((item) => (
-          <li onClick={() => setIsCategorieSelect(item)} key={item}>
-            {item}
-          </li>
-        ))}
-      </ul>
-      <div>
-        <input value={""} type="text" placeholder={`프로젝트명 검색`} />
-      </div>
-    </div>
-  );
-}
-
 // _________________  프로젝트 생성 popup_________________
-export function CreateProject({ handlePopupClose }) {
+export function CreateProject({ handlePopupClose, popupRef }) {
+  useClickOutSide([popupRef], () => {
+    handlePopupClose();
+  });
+
   return (
     <div className="createProject">
-      <div>
+      <div ref={popupRef}>
         <div>
           <p>새 프로젝트</p>
           <button onClick={handlePopupClose} type="button">
@@ -96,7 +88,9 @@ export function CreateProject({ handlePopupClose }) {
             id="diagnosisPurpose"
             placeholder="진단 목적을 입력해 주세요"
           />
-          <button type="submit">프로젝트 생성</button>
+          <button className="btn-bg-Blue" type="submit">
+            프로젝트 생성
+          </button>
         </form>
       </div>
     </div>
@@ -111,8 +105,8 @@ export function ProjectList() {
         <tr>
           <th>생성일</th>
           <th>프로젝트명</th>
-          <th>진단 기간</th>
           <th>용역업체명</th>
+          <th>진단 기간</th>
           <th>편집</th>
         </tr>
       </thead>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import JSZip from "jszip";
 
+// _________사용자 업로드 파일 압축 해제 썸네일 추출 __________
 export default function useFileUpload() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [thumbnails, setThumbnails] = useState([]);

@@ -1,16 +1,30 @@
-import { useState } from "react";
-import useFileUpload from "../../lib/project/useFileUpload";
+import { useRef, useState } from "react";
+import useFileUpload from "../../lib/hooks/useFileUpload";
 import postUploadFiles from "../../lib/api/postUploadFiles";
+import { useClickOutSide } from "../../lib/hooks/useClickOutside";
+import { YearSearchBox } from "../../components/project/YearSearchBox";
 
 // _________________fileUpload Content Container_________________
 export default function FileUpload() {
   const { uploadedFiles, setUploadedFiles, thumbnails } = useFileUpload();
-
+  const [isCategorieSelect, setIsCategorieSelect] = useState("2025");
+  const [isSelctProjectName, setIsSelctProjectName] = useState("");
   return (
     <section className="fileUpload content">
       <h2>파일 업로드</h2>
       <p>Easily upload files and preview them right away</p>
-      <InputFile setUploadedFiles={setUploadedFiles} />
+      <div>
+        <InputFile
+          isSelctProjectName={isSelctProjectName}
+          setUploadedFiles={setUploadedFiles}
+        />
+        <ProjectSeclectBox
+          isSelctProjectName={isSelctProjectName}
+          setIsSelctProjectName={setIsSelctProjectName}
+          isCategorieSelect={isCategorieSelect}
+          setIsCategorieSelect={setIsCategorieSelect}
+        />
+      </div>
       <UploadedFileList
         uploadedFiles={uploadedFiles}
         setUploadedFiles={setUploadedFiles}
@@ -23,8 +37,11 @@ export default function FileUpload() {
 // _________________파일 업로드 박스 파싱하고 저장_________________
 // _________________Key : 파일명 (확장자X) _________________
 // _________________value : file,groups _________________
-export function InputFile({ setUploadedFiles }) {
+export function InputFile({ setUploadedFiles, isSelctProjectName }) {
   const handleChangeInput = (e) => {
+    if (!isSelctProjectName) {
+      return alert("프로젝트를 선택해주세요.");
+    }
     const selectedFiles = Array.from(e.target.files);
 
     const udFiles = selectedFiles
@@ -63,12 +80,60 @@ export function InputFile({ setUploadedFiles }) {
         <img src="/images/upload_Icon.png" alt="" />
         <p>Drag and drop files here</p>
         <span>- OR -</span>
-        <mark type="button">Browse Files</mark>
+        <mark className="btn-bg-Blue" type="button">
+          Browse Files
+        </mark>
       </label>
     </form>
   );
 }
 
+export function ProjectSeclectBox({
+  isCategorieSelect,
+  setIsCategorieSelect,
+  isSelctProjectName,
+  setIsSelctProjectName,
+}) {
+  const values = [
+    "울산UGPS",
+    "나사우주정거장",
+    "이집트유적지",
+    "앙골라",
+    "네카라쿠배당토",
+    "3층화장실",
+    "충무로역4번출구",
+    "2025호남생물자원관",
+    "대통령상1등",
+    "가즈아",
+    "UD1000",
+    "사무실에어컨의소중함",
+  ];
+
+  return (
+    <div className="projectSelectBox">
+      <YearSearchBox
+        isCategorieSelect={isCategorieSelect}
+        setIsCategorieSelect={setIsCategorieSelect}
+      />
+      {isSelctProjectName ? (
+        <p>{isSelctProjectName}</p>
+      ) : (
+        <p>업로드할 프로젝트를 먼저 선택해주세요.</p>
+      )}
+      <ul>
+        {values.map((item) => {
+          return (
+            <li onClick={() => setIsSelctProjectName(item)}>
+              <span className={isSelctProjectName === item ? "active" : ""}>
+                {item}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 // _________________업로드 파일 목록_________________
 // _________________썸네일(실화상 이미지) 팝업_________________
 // _________________추가 설정 값 받아서 기존 객체에 값 추가_________________
@@ -96,6 +161,12 @@ export function UploadedFileList({
   const handlePopupClose = () => {
     setIsPopupOpen("");
   };
+
+  // _________________바깥 요소 클릭 감지 ______________
+  const popupRef = useRef();
+  useClickOutSide([popupRef], () => {
+    handlePopupClose();
+  });
 
   // _________________추가 설정 값 받아서 기존 객체에 값 추가_________________
   // _________________만약 동일 컬럼의 다중 셀 선택시 모든 선택 셀에 값 추가_________________
@@ -167,7 +238,7 @@ export function UploadedFileList({
       {thumbnails[0] ? (
         <>
           <div>
-            <h3>File List</h3>
+            <h3>파일 목록</h3>
             <FileUploadBtn uploadedFiles={uploadedFiles} />
           </div>
           <p>각 필드에 해당하는 내용을 입력해주세요.</p>
@@ -218,10 +289,10 @@ export function UploadedFileList({
               <span>cancel</span>
             </button>
             {isPopupOpen.url === file.url && (
-              <div>
+              <div ref={popupRef}>
                 <p>{isPopupOpen.name}</p>
                 <img src={isPopupOpen?.url} alt="" />
-                <button onClick={() => handlePopupClose()}>❌</button>
+                <button onClick={() => handlePopupClose()}>닫기</button>
               </div>
             )}
           </li>
@@ -243,5 +314,9 @@ export function FileUploadBtn(uploadedFiles) {
     }
   };
 
-  return <button onClick={handleUpload}>SAVE</button>;
+  return (
+    <button className="btn-bg-Blue" onClick={handleUpload}>
+      저장하기
+    </button>
+  );
 }

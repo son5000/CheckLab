@@ -1,7 +1,7 @@
 import "./css/import.css";
 import { AuthContextProvider } from "./lib/login/loginAuth";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginContainer from "./components/LoginContainer.jsx";
+import LoginContainer from "./components/login/LoginContainer.jsx";
 import LoginForm from "./pages/login/LoginFrom.jsx";
 import Container from "./components/Container.jsx";
 import History from "./pages/project/History.jsx";
