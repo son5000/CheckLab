@@ -1,25 +1,25 @@
 import { useRef, useState } from "react";
-import useFileUpload from "../../lib/hooks/useFileUpload";
-import postUploadFiles from "../../lib/api/postUploadFiles";
+import { useFileUpload } from "../../lib/hooks/useFileUpload";
+import { postUploadFiles } from "../../lib/api/postUploadFiles";
 import { useClickOutSide } from "../../lib/hooks/useClickOutside";
-import { YearSearchBox } from "../../components/project/YearSearchBox";
+import YearSearchBox from "../../components/project/YearSearchBox";
 
 // _________________fileUpload Content Container_________________
 export default function FileUpload() {
-  const { uploadedFiles, setUploadedFiles, thumbnails } = useFileUpload();
   const [isCategorieSelect, setIsCategorieSelect] = useState("2025");
-  const [isSelctProjectName, setIsSelctProjectName] = useState("");
+  const [isSelectProjectName, setIsSelctProjectName] = useState("");
+  const { uploadedFiles, setUploadedFiles, thumbnails } = useFileUpload();
   return (
     <section className="fileUpload content">
       <h2>파일 업로드</h2>
       <p>Easily upload files and preview them right away</p>
       <div>
         <InputFile
-          isSelctProjectName={isSelctProjectName}
+          isSelectProjectName={isSelectProjectName}
           setUploadedFiles={setUploadedFiles}
         />
         <ProjectSeclectBox
-          isSelctProjectName={isSelctProjectName}
+          isSelectProjectName={isSelectProjectName}
           setIsSelctProjectName={setIsSelctProjectName}
           isCategorieSelect={isCategorieSelect}
           setIsCategorieSelect={setIsCategorieSelect}
@@ -37,10 +37,11 @@ export default function FileUpload() {
 // _________________파일 업로드 박스 파싱하고 저장_________________
 // _________________Key : 파일명 (확장자X) _________________
 // _________________value : file,groups _________________
-export function InputFile({ setUploadedFiles, isSelctProjectName }) {
+export function InputFile({ setUploadedFiles, isSelectProjectName }) {
   const handleChangeInput = (e) => {
-    if (!isSelctProjectName) {
-      return alert("프로젝트를 선택해주세요.");
+    if (!isSelectProjectName) {
+      setUploadedFiles({});
+      return alert("프로젝트를 선택해 주세요.");
     }
     const selectedFiles = Array.from(e.target.files);
 
@@ -91,22 +92,18 @@ export function InputFile({ setUploadedFiles, isSelctProjectName }) {
 export function ProjectSeclectBox({
   isCategorieSelect,
   setIsCategorieSelect,
-  isSelctProjectName,
+  isSelectProjectName,
   setIsSelctProjectName,
 }) {
   const values = [
     "울산UGPS",
-    "나사우주정거장",
-    "이집트유적지",
-    "앙골라",
-    "네카라쿠배당토",
-    "3층화장실",
-    "충무로역4번출구",
-    "2025호남생물자원관",
-    "대통령상1등",
-    "가즈아",
-    "UD1000",
-    "사무실에어컨의소중함",
+    "국립호남권생물자원관",
+    "체크가드㈜",
+    "청수F&C",
+    "SK 이노베이션",
+    "제주 SK",
+    "가스공사",
+    "CheckGuard",
   ];
 
   return (
@@ -115,16 +112,16 @@ export function ProjectSeclectBox({
         isCategorieSelect={isCategorieSelect}
         setIsCategorieSelect={setIsCategorieSelect}
       />
-      {isSelctProjectName ? (
-        <p>{isSelctProjectName}</p>
+      {isSelectProjectName ? (
+        <p>{isSelectProjectName}</p>
       ) : (
         <p>업로드할 프로젝트를 먼저 선택해주세요.</p>
       )}
       <ul>
-        {values.map((item) => {
+        {values.map((item, idx) => {
           return (
-            <li onClick={() => setIsSelctProjectName(item)}>
-              <span className={isSelctProjectName === item ? "active" : ""}>
+            <li key={idx} onClick={() => setIsSelctProjectName(item)}>
+              <span className={isSelectProjectName === item ? "active" : ""}>
                 {item}
               </span>
             </li>
@@ -241,9 +238,9 @@ export function UploadedFileList({
             <h3>파일 목록</h3>
             <FileUploadBtn uploadedFiles={uploadedFiles} />
           </div>
-          <p>각 필드에 해당하는 내용을 입력해주세요.</p>
+          <p>각 필드에 해당하는 내용을 입력해 주세요.</p>
           <div className="toolBar">
-            <span>파일명</span>
+            <span>파일명 (형식)</span>
             <span>설비구분</span>
             <span>장소</span>
             <span>설비명</span>
@@ -255,7 +252,10 @@ export function UploadedFileList({
       <ul>
         {thumbnails.map((file, idx) => (
           <li key={idx}>
-            <p>{file.name}</p>
+            <p>
+              {file.name}
+              <span> ({file?.type === "image" ? "이미지" : "동영상"})</span>
+            </p>
             <input
               type="text"
               onClick={() => handleSelectedInputText(file.name, 0)}

@@ -1,12 +1,29 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, use } from "react";
 import { useClickOutSide } from "../../lib/hooks/useClickOutside";
-import { YearSearchBox } from "../../components/project/YearSearchBox";
+import YearSearchBox from "../../components/project/YearSearchBox";
+import DateInput from "../../components/project/DateInput";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../lib/login/loginAuth";
+import { PostCreateProject } from "../../lib/api/postCreateProject";
+import { getProjectList } from "../../lib/api/getProjectList";
+import { dateformat } from "../../lib/project/dateFormat";
 
 // _________________Home Content Container _________________
 export default function Overview() {
   const [isCategorieSelect, setIsCategorieSelect] = useState(2025);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const popupRef = useRef();
+  const [projects, setProjects] = useState(null);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const result = await getProjectList(user?.id);
+      setProjects(result);
+    };
+
+    fetchProjects(); // 호출
+  }, [user]);
 
   const handlePopupClose = () => {
     setIsPopupOpen(false);
@@ -26,6 +43,7 @@ export default function Overview() {
       </div>
       {isPopupOpen && (
         <CreateProject
+          user={user}
           popupRef={popupRef}
           handlePopupClose={handlePopupClose}
         />
@@ -34,16 +52,55 @@ export default function Overview() {
         <span>Projects / </span>
         <span>Project {isCategorieSelect}</span>
       </p>
-      <ProjectList />
+      <ProjectList projects={projects} />
     </section>
   );
 }
 
 // _________________  프로젝트 생성 popup_________________
-export function CreateProject({ handlePopupClose, popupRef }) {
+export function CreateProject({ handlePopupClose, popupRef, user }) {
   useClickOutSide([popupRef], () => {
     handlePopupClose();
   });
+
+  const [form, setForm] = useState({
+    project_name: "",
+    contract_name: "",
+    period_start: "",
+    period_end: "",
+    contractor: "",
+    purpose: "",
+    creator_id: "",
+  });
+
+  useEffect(() => {
+    if (user?.id) {
+      setForm((prev) => ({
+        ...prev,
+        creator_id: user.id,
+      }));
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setForm({
+      ...form,
+      [id]: value,
+    });
+  };
+
+  const handleSummit = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const { success, message } = await PostCreateProject(form);
+
+    alert(message);
+
+    if (success) {
+      handlePopupClose();
+    }
+  };
 
   return (
     <div className="createProject">
@@ -54,38 +111,55 @@ export function CreateProject({ handlePopupClose, popupRef }) {
             닫기
           </button>
         </div>
-        <form>
-          <label htmlFor="projectName">프로젝트명</label>
+        <form onSubmit={(e) => handleSummit(e)}>
+          <label htmlFor="project_name">프로젝트명</label>
           <input
-            id="projectName"
+            onChange={(e) => handleChange(e)}
+            value={form.project_name}
+            id="project_name"
             type="text"
             placeholder="프로젝트명을 입력해 주세요"
           />
 
-          <label htmlFor="serviceName">용역명</label>
+          <label htmlFor="contract_name">용역명</label>
           <input
-            id="serviceName"
+            onChange={(e) => handleChange(e)}
+            value={form.contract_name}
+            id="contract_name"
             type="text"
             placeholder="용역명을 입력해 주세요"
           />
 
-          <label htmlFor="dateValue">진단 기간</label>
+          <label htmlFor="period_start">진단 기간</label>
+          <div>
+            <DateInput
+              setForm={setForm}
+              form={form}
+              value={form.period_start}
+              htmlFor={"period_start"}
+            />
+            <span> ~ </span>
+            <DateInput
+              setForm={setForm}
+              form={form}
+              value={form.period_end}
+              htmlFor={"period_end"}
+            />
+          </div>
+          <label htmlFor="contractor">용역업체명</label>
           <input
-            id="dateValue"
-            type="text"
-            placeholder="진단 기간을 입력해 주세요"
-          />
-
-          <label htmlFor="agencyName">용역업체명</label>
-          <input
-            id="agencyName"
+            onChange={(e) => handleChange(e)}
+            value={form.contractor}
+            id="contractor"
             type="text"
             placeholder="용역업체명을 입력해 주세요"
           />
 
-          <label htmlFor="diagnosisPurpose">진단 목적</label>
+          <label htmlFor="purpose">진단 목적</label>
           <textarea
-            id="diagnosisPurpose"
+            onChange={(e) => handleChange(e)}
+            value={form.purpose}
+            id="purpose"
             placeholder="진단 목적을 입력해 주세요"
           />
           <button className="btn-bg-Blue" type="submit">
@@ -98,7 +172,7 @@ export function CreateProject({ handlePopupClose, popupRef }) {
 }
 
 // _________________ project Table _________________
-export function ProjectList() {
+export function ProjectList({ projects }) {
   return (
     <table className="projectList">
       <thead>
@@ -111,30 +185,31 @@ export function ProjectList() {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>2025-07-09</td>
-          <td>서울지하철 점검</td>
-          <td>ABC엔지니어링</td>
-          <td>2025.07.01 ~ 2025.07.15</td>
-          <td>
-            <button type="button">편집</button>
-          </td>
-        </tr>
-        <tr>
-          <td>2025-07-01</td>
-          <td>한강교량 안전진단</td>
-          <td>세이프코어</td>
-          <td>2025.06.10 ~ 2025.06.30</td>
-          <td>
-            <button type="button">편집</button>
-          </td>
-        </tr>
+        {Array.isArray(projects) &&
+          projects.map((item, idx) => {
+            const formatted = {
+              created: dateformat(item?.created_at).hasTimeDate,
+              start: dateformat(item?.period_start).hasDayDate,
+              end: dateformat(item?.period_end).hasDayDate,
+            };
+
+            return (
+              <tr key={item?.id}>
+                <td>{formatted.created}</td>
+                <td>
+                  <Link className="linkStyle_Blue" to={`/project/${idx}`}>
+                    {item?.project_name}
+                  </Link>
+                </td>
+                <td>{item?.contractor}</td>
+                <td>{`${formatted.start} ~ ${formatted.end}`}</td>
+                <td>
+                  <button type="button">편집</button>
+                </td>
+              </tr>
+            );
+          })}
       </tbody>
     </table>
   );
-}
-
-// _________________ 프로젝트 단위의 요소 _________________
-export function ListItem() {
-  return <tr></tr>;
 }

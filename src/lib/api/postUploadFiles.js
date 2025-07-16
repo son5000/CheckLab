@@ -1,5 +1,5 @@
 // ____________업로드 파일 백엔드 송신부 API____________
-export default function postUploadFiles(file) {
+export function postUploadFiles(file) {
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   return fetch(`${backendUrl}/fileUpload`, {

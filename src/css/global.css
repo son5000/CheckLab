@@ -308,3 +308,9 @@ footer {
     background-color: var(--Color--M-Blue);
   }
 }
+
+.linkStyle_Blue {
+  color: var(--Color--M-Blue);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

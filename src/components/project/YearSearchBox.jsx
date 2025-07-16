@@ -1,5 +1,11 @@
+import { useState } from "react";
+
 // _________________ 검색 박스 (연도별 프로젝트 검색)_________________
-export function YearSearchBox({ isCategorieSelect, setIsCategorieSelect }) {
+export default function YearSearchBox({
+  isCategorieSelect,
+  setIsCategorieSelect,
+}) {
+  const [inputValue, setInputValue] = useState("");
   const category = [2025, 2024, 2023, 2022, 2021, 2020];
   return (
     <div className="searchBox">
@@ -12,7 +18,12 @@ export function YearSearchBox({ isCategorieSelect, setIsCategorieSelect }) {
         ))}
       </ul>
       <div>
-        <input value={""} type="text" placeholder={`프로젝트명 검색`} />
+        <input
+          onChange={(e) => setInputValue(e.target.value)}
+          value={inputValue}
+          type="text"
+          placeholder={`프로젝트명 검색`}
+        />
       </div>
     </div>
   );

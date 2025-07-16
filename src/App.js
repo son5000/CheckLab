@@ -6,7 +6,7 @@ import LoginForm from "./pages/login/LoginFrom.jsx";
 import Container from "./components/Container.jsx";
 import History from "./pages/project/History.jsx";
 import FileUpload from "./pages/project/FileUpload.jsx";
-import FileDetail from "./components/project/history/FileDetail.jsx";
+import FileDetail from "./pages/project/FileDetail.jsx";
 import Overview from "./pages/project/Overview.jsx";
 
 function App() {
@@ -21,8 +21,8 @@ function App() {
           <Route path="/project" element={<Container />}>
             <Route index element={<Overview />} />
             <Route path="fileUpload" element={<FileUpload />} />
-            <Route path="history" element={<History />} />
-            <Route path="history/:id" element={<FileDetail />} />
+            <Route path=":id" element={<History />} />
+            <Route path=":id/detail" element={<FileDetail />} />
           </Route>
         </Routes>
       </BrowserRouter>

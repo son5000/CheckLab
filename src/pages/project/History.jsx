@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import sampleData from "../../lib/data/sample.json";
 import {
   sortByDateDesc,
@@ -218,16 +218,16 @@ export function Column({
 export function Item({ data }) {
   const navigate = useNavigate();
 
-  const handleClickFile = (id) => {
-    navigate(`/dashboard/history/${id}`);
-  };
-
   return (
     <>
-      {data.map((item) => (
-        <li onClick={() => handleClickFile(item.id)} key={item.id}>
+      {data.map((item, idx) => (
+        <li key={item.id}>
           <span>{item.date}</span>
-          <span>{item.fileName}</span>
+          <span>
+            <Link className="linkStyle_Blue" to={`/project/${idx + 1}/detail`}>
+              {item.fileName}
+            </Link>
+          </span>
           <span>
             <mark className={item.status === "오류" ? "active" : ""}>
               {item.status}

@@ -25,14 +25,6 @@ export default function Aside() {
                 파일 업로드
               </Link>
             </li>
-            <li>
-              <Link
-                className={secondSegment === "History" ? "active" : ""}
-                to="/project/History"
-              >
-                파일 관리
-              </Link>
-            </li>
           </ul>
         </li>
       </ul>
